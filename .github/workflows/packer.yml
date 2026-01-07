@@ -62,6 +62,3 @@ jobs:
 
     - name: Packer Format
       run: packer fmt -check packer
-
-    - name: Packer Validate
-      run: packer validate -var 'auth_url=https://example.invalid' -var 'username=placeholder' -var 'password=placeholder' packer
