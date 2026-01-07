@@ -11,3 +11,6 @@ packer_cache/
 
 # OS files
 .DS_Store
+
+#Clouds.yaml
+clouds.yaml

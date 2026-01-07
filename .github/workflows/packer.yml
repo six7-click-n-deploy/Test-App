@@ -1,0 +1,50 @@
+# GitHub Actions Workflow: Packer checks
+# Runs on `push`, pull requests, and created releases.
+# For pull requests and checks the following steps are executed:
+# - Checkout: the repository is checked out.
+# - Setup Packer: `hashicorp/setup-packer` installs Packer on the runner.
+# In the `packer` working directory the following commands are executed to validate templates:
+# - `packer init`        -> initializes any modules or plugin requirements
+# - `packer fmt -check`  -> checks that Packer templates are properly formatted
+# - `packer validate`    -> validates the Packer template(s)
+
+name: 'Packer'
+
+on:
+  push:
+  pull_request:
+    branches: [ "main" ]
+  release:
+    types: [created]
+
+permissions:
+  contents: read
+
+jobs:
+  packer:
+    name: 'Packer'
+    runs-on: ubuntu-latest
+    environment: production
+
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Setup Packer
+      uses: hashicorp/setup-packer@v1
+
+    - name: Packer Init
+      run: packer init
+      working-directory: packer
+
+    - name: Packer Format
+      run: packer fmt -check
+      working-directory: packer
+
+    - name: Packer Validate
+      run: packer validate
+      working-directory: packer

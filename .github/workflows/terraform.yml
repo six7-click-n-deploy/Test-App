@@ -1,53 +1,24 @@
-# This workflow installs the latest version of Terraform CLI and configures the Terraform CLI configuration file
-# with an API token for Terraform Cloud (app.terraform.io). On pull request events, this workflow will run
-# `terraform init`, `terraform fmt`, and `terraform plan` (speculative plan via Terraform Cloud). On push events
-# to the "main" branch, `terraform apply` will be executed.
-#
-# Documentation for `hashicorp/setup-terraform` is located here: https://github.com/hashicorp/setup-terraform
-#
-# To use this workflow, you will need to complete the following setup steps.
-#
-# 1. Create a `main.tf` file in the root of this repository with the `remote` backend and one or more resources defined.
-#   Example `main.tf`:
-#     # The configuration for the `remote` backend.
-#     terraform {
-#       backend "remote" {
-#         # The name of your Terraform Cloud organization.
-#         organization = "example-organization"
-#
-#         # The name of the Terraform Cloud workspace to store Terraform state files in.
-#         workspaces {
-#           name = "example-workspace"
-#         }
-#       }
-#     }
-#
-#     # An example resource that does nothing.
-#     resource "null_resource" "example" {
-#       triggers = {
-#         value = "A example resource that does nothing!"
-#       }
-#     }
-#
-#
-# 2. Generate a Terraform Cloud user API token and store it as a GitHub secret (e.g. TF_API_TOKEN) on this repository.
-#   Documentation:
-#     - https://www.terraform.io/docs/cloud/users-teams-organizations/api-tokens.html
-#     - https://help.github.com/en/actions/configuring-and-managing-workflows/creating-and-storing-encrypted-secrets
-#
-# 3. Reference the GitHub secret in step using the `hashicorp/setup-terraform` GitHub Action.
-#   Example:
-#     - name: Setup Terraform
-#       uses: hashicorp/setup-terraform@v1
-#       with:
-#         cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+# GitHub Actions Workflow: Terraform checks
+# Runs on `push`, pull requests, and created releases.
+# For pull requests and checks the following steps are executed:
+# - Checkout: the repository is checked out.
+# - Setup Terraform: `hashicorp/setup-terraform` installs Terraform and configures the CLI
+#   using the token from the `TF_API_TOKEN` secret.
+# In the `terraform` working directory the following commands are checked:
+# - `terraform init -backend=false`  -> initializes the directory without a remote backend
+# - `terraform fmt -check`          -> checks that all `.tf` files are properly formatted
+# - `terraform validate`           -> validates the Terraform configuration
+# On pushes to the `main` branch `terraform apply` is intended to run (requires
+# a remote backend configuration in `terraform/main.tf` and a set `TF_API_TOKEN`).
 
 name: 'Terraform'
 
+# Only by pull requests or creating new releases
+
 on:
   push:
-    branches: [ "main" ]
   pull_request:
+    branches: [ "main" ]
   release:
     types: [created]
 
@@ -70,11 +41,9 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
 
-    # Install the latest version of Terraform CLI and configure the Terraform CLI configuration file with a Terraform Cloud user API token
+    # Install the latest version of Terraform CLI 
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v1
-      with:
-        cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
 
     # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
     - name: Terraform Init
