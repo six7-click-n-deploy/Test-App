@@ -37,6 +37,13 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
 
+    - name: Debug workspace
+      run: |
+        pwd
+        ls -la
+        ls -la packer || echo "packer directory not found"
+        git rev-parse --abbrev-ref HEAD || true
+        git log -1 --oneline || true
     - name: Setup `packer` (local action)
       uses: ./.github/actions
       id: setup_packer
@@ -50,7 +57,6 @@ jobs:
       run: packer version
 
     - name: Packer Init
-      run: ls
       run: packer init .
       working-directory: packer
 
