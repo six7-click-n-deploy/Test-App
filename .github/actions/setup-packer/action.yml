@@ -12,6 +12,7 @@ runs:
       run: |
         sudo apt-get update
         sudo apt-get install -y unzip curl jq
+
     - name: Download and install packer
       shell: bash
       run: |
@@ -26,5 +27,7 @@ runs:
         unzip -o packer.zip
         sudo mv -f packer /usr/local/bin/packer
         rm -f packer.zip
+
     - name: Verify packer
-      run: packer version
+      run: |
+        packer version
