@@ -58,10 +58,10 @@ jobs:
       run: packer version
 
     - name: Packer Init
-      run: packer init -chdir=packer .
+      run: packer init packer
 
     - name: Packer Format
-      run: packer fmt -chdir=packer -check
+      run: packer fmt -check
 
     - name: Packer Validate
-      run: packer validate -chdir=packer
+      run: packer validate packer
