@@ -24,7 +24,7 @@ runs:
         fi
         URL="https://releases.hashicorp.com/packer/${VERSION}/packer_${VERSION}_linux_amd64.zip"
         curl -fsSL -o packer.zip "$URL"
-        rm -f packer
+        rm -rf packer
         unzip -o packer.zip
         sudo mv -f packer /usr/local/bin/packer
         rm -f packer.zip
