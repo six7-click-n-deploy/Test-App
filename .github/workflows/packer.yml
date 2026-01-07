@@ -42,9 +42,10 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y unzip curl
         curl -fsSL -o packer.zip "https://releases.hashicorp.com/packer/${PACKER_VERSION}/packer_${PACKER_VERSION}_linux_amd64.zip"
-        unzip packer.zip
-        sudo mv packer /usr/local/bin/packer
-        rm packer.zip
+        rm -f packer
+        unzip -o packer.zip
+        sudo mv -f packer /usr/local/bin/packer
+        rm -f packer.zip
         packer version
 
     - name: Packer Init
