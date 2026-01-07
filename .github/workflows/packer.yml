@@ -38,7 +38,7 @@ jobs:
       uses: actions/checkout@v4
 
     - name: Setup `packer` (local action)
-      uses: ./.github/actions/setup-packer
+      uses: ./.github/actions
       id: setup_packer
       with:
         version: '1.10.0'
