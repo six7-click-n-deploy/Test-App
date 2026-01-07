@@ -34,8 +34,18 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
 
-    - name: Setup Packer
-      uses: hashicorp/setup-packer@v1
+    - name: Install Packer
+      env:
+        PACKER_VERSION: '1.9.2'
+      run: |
+        set -eux
+        sudo apt-get update
+        sudo apt-get install -y unzip curl
+        curl -fsSL -o packer.zip "https://releases.hashicorp.com/packer/${PACKER_VERSION}/packer_${PACKER_VERSION}_linux_amd64.zip"
+        unzip packer.zip
+        sudo mv packer /usr/local/bin/packer
+        rm packer.zip
+        packer version
 
     - name: Packer Init
       run: packer init
