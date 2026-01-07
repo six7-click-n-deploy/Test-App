@@ -1,0 +1,30 @@
+name: "setup-packer"
+description: "Install a specified Packer version on the runner"
+inputs:
+  version:
+    description: "Packer version to install (e.g. 1.10.0 or latest)"
+    required: false
+    default: "1.10.0"
+runs:
+  using: "composite"
+  steps:
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y unzip curl jq
+    - name: Download and install packer
+      shell: bash
+      run: |
+        set -eux
+        VERSION="${{ inputs.version }}"
+        if [ "$VERSION" = "latest" ]; then
+          VERSION="$(curl -fsSL https://checkpoint-api.hashicorp.com/v1/check/packer | jq -r .current_version)"
+        fi
+        URL="https://releases.hashicorp.com/packer/${VERSION}/packer_${VERSION}_linux_amd64.zip"
+        curl -fsSL -o packer.zip "$URL"
+        rm -f packer
+        unzip -o packer.zip
+        sudo mv -f packer /usr/local/bin/packer
+        rm -f packer.zip
+    - name: Verify packer
+      run: packer version
