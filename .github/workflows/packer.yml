@@ -49,7 +49,7 @@ jobs:
       uses: ./.github/actions
       id: setup_packer
       with:
-        version: '1.10.0'
+        version: '1.14.3.'
 
     - name: Print `$PATH` for `packer`
       run: which packer
