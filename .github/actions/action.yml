@@ -24,10 +24,10 @@ runs:
         fi
         URL="https://releases.hashicorp.com/packer/${VERSION}/packer_${VERSION}_linux_amd64.zip"
         curl -fsSL -o packer.zip "$URL"
-        rm -rf packer
-        unzip -o packer.zip
-        sudo mv -f packer /usr/local/bin/packer
-        rm -f packer.zip
+        TMPDIR="$(mktemp -d)"
+        unzip -o packer.zip -d "$TMPDIR"
+        sudo mv -f "$TMPDIR/packer" /usr/local/bin/packer
+        rm -rf "$TMPDIR" packer.zip
 
     - name: Verify packer
       shell: bash
