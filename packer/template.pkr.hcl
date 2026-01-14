@@ -39,7 +39,7 @@ variable "floating_ip_pool" {
 
 variable "security_group" {
   type        = string
-  default     = "simple-webserver-sg-ff3ad318"
+  default     = "simple-webserver-sg-81ec1652"
   description = "Security group with SSH/HTTP/HTTPS access"
 }
 
